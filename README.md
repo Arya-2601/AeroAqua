@@ -11,7 +11,7 @@ AeroAqua is an environmental intelligence platform that detects abnormal air-pol
 [![Database](https://img.shields.io/badge/Database-SQLite%20%7C%20PostgreSQL-336791)](#)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-Live Demo: [YOUR_DEPLOYED_URL](YOUR_DEPLOYED_URL) | Demo Video: [YOUR_DEMO_VIDEO_LINK](YOUR_DEMO_VIDEO_LINK) | Specification: [SPEC.md](SPEC.md)
+Live Demo: [DEPLOYED_URL]()Specification: [SPEC.md](SPEC.md)
 
 ---
 
