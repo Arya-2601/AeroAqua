@@ -68,6 +68,11 @@ export const api = {
     return res.data;
   },
 
+  removeStation: async (id) => {
+    const res = await client.delete(`/api/stations/${id}`);
+    return res.data;
+  },
+
   // Anomalies
   getAnomalies: async (active = true) => {
     const res = await client.get('/api/anomalies', {

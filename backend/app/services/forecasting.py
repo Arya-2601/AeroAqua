@@ -19,6 +19,7 @@ from ..ml.features import build_inference_features, FEATURE_COLUMNS
 from ..ml.train import train_models
 from .aqi import get_aqi_info
 from .alerts import determine_risk_level
+from .datetime_service import format_ist_iso
 
 ARTIFACTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ml", "artifacts")
 
@@ -201,7 +202,7 @@ def forecast_station_pm25(
             "pm25": round(curr_pm25, 1),
             "category": curr_cat["category"],
             "color": curr_cat["color"],
-            "timestamp": curr_ts.isoformat(),
+            "timestamp": format_ist_iso(curr_ts),
         },
         "forecast": forecast_items,
         "risk_level": risk_level,

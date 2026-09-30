@@ -12,10 +12,14 @@ import {
   RefreshCw,
   Radio,
   StopCircle,
-  CheckCircle,
+  CheckCircle2,
   Shield,
   Eye,
   Megaphone,
+  MapPin,
+  Clock,
+  TrendingUp,
+  X,
 } from 'lucide-react';
 
 export default function Alerts() {
@@ -111,7 +115,6 @@ export default function Alerts() {
     setActionLoadingId(alertId);
     try {
       const res = await api.resolveAlert(alertId);
-      // Immediately update UI: mark as resolved and remove from active broadcast
       setAlerts((prev) =>
         prev.map((a) =>
           a.id === alertId
@@ -123,7 +126,6 @@ export default function Alerts() {
         type: 'success',
         text: `Alert #${alertId} marked as RESOLVED. Broadcast terminated.`,
       });
-      // If showing active only, refresh list to exclude resolved alert
       if (showActiveOnly) {
         setTimeout(fetchAlerts, 600);
       }
@@ -136,6 +138,21 @@ export default function Alerts() {
     }
   };
 
+  const getAlertSeverityBorder = (riskLevel) => {
+    switch ((riskLevel || '').toUpperCase()) {
+      case 'CRITICAL':
+        return 'border-l-4 border-l-rose-500';
+      case 'WARNING':
+        return 'border-l-4 border-l-amber-500';
+      case 'WATCH':
+      case 'INFORMATION':
+      case 'INFO':
+        return 'border-l-4 border-l-sky-500';
+      default:
+        return 'border-l-4 border-l-slate-400';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-6">
@@ -143,42 +160,50 @@ export default function Alerts() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
           <div>
             <div className="flex items-center space-x-2">
-              <span className={`p-2 rounded-xl ${isAuthority ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}`}>
+              <span className={`p-2 rounded-xl border ${
+                isAuthority
+                  ? 'bg-amber-50 text-amber-800 border-amber-200'
+                  : 'bg-sky-50 text-sky-800 border-sky-200'
+              }`}>
                 {isAuthority ? <Megaphone className="w-5 h-5" /> : <Bell className="w-5 h-5" />}
               </span>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-sans">
                 {isAuthority ? 'Authority Broadcast Command' : 'Official Public Advisories'}
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
               {isAuthority
-                ? 'Review detected environmental risks, broadcast advisories to citizens, or revoke/resolve alerts.'
-                : `Active emergency notices and environmental warnings issued for ${currentRegion}.`}
+                ? `Operational risk assessment and emergency broadcast console for ${currentRegion}.`
+                : `Official municipal notices and public health advisories issued for ${currentRegion}.`}
             </p>
           </div>
 
           <div className="flex items-center space-x-3">
             {isAuthority && (
               <button
+                type="button"
                 onClick={() => setShowActiveOnly(!showActiveOnly)}
-                className="text-xs font-bold px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                className="text-xs font-semibold px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 shadow-2xs transition-colors"
               >
-                {showActiveOnly ? 'Show All History' : 'Show Active Only'}
+                {showActiveOnly ? 'Show Full History' : 'Show Active Only'}
               </button>
             )}
             <button
+              type="button"
               onClick={fetchAlerts}
-              className="p-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-100 shadow-sm"
+              className="p-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 shadow-2xs transition-colors"
               title="Refresh alerts"
+              aria-label="Refresh alerts list"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-sky-600' : ''}`} />
             </button>
           </div>
         </div>
 
+        {/* Feedback Banner */}
         {statusFeedback && (
           <div
-            className={`p-3 rounded-xl text-xs font-semibold flex items-center justify-between border ${
+            className={`p-3.5 rounded-xl text-xs font-semibold flex items-center justify-between border shadow-2xs animate-in fade-in duration-150 ${
               statusFeedback.type === 'error'
                 ? 'bg-rose-50 border-rose-200 text-rose-800'
                 : 'bg-emerald-50 border-emerald-200 text-emerald-800'
@@ -187,45 +212,44 @@ export default function Alerts() {
             <span>{typeof statusFeedback === 'string' ? statusFeedback : statusFeedback.text}</span>
             <button
               onClick={() => setStatusFeedback(null)}
-              className="text-slate-500 hover:text-slate-900 font-bold ml-2"
+              className="text-slate-400 hover:text-slate-700 ml-2"
+              aria-label="Dismiss message"
             >
-              &times;
+              <X className="w-3.5 h-3.5" />
             </button>
           </div>
         )}
 
         {loading ? (
-          <div className="bg-white rounded-2xl p-12 text-center text-slate-500 border border-slate-200">
-            <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-amber-600" />
-            <span className="text-sm font-medium">Loading alerts &amp; broadcasts...</span>
+          <div className="bg-white rounded-2xl p-12 text-center text-slate-500 border border-slate-200 shadow-2xs">
+            <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-sky-600" />
+            <span className="text-sm font-medium">Loading alerts and public advisories...</span>
           </div>
         ) : alerts.length === 0 ? (
-          <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 shadow-sm">
-            <ShieldCheck className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
-            <h3 className="font-bold text-slate-800 text-lg">No Active Warnings</h3>
+          <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 shadow-2xs">
+            <ShieldCheck className="w-12 h-12 text-emerald-600 mx-auto mb-3 stroke-[1.8]" />
+            <h3 className="font-bold text-slate-800 text-base">No Active Alerts</h3>
             <p className="text-xs text-slate-500 max-w-md mx-auto mt-1">
-              {isAuthority
-                ? `No active alerts for ${currentRegion}. All monitored parameters operating within normal thresholds.`
-                : `No active emergency broadcasts for ${currentRegion}. Environmental parameters are within municipal limits.`}
+              No active environmental alerts are currently detected in this region. All monitored stations are operating within safe baseline parameters.
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3.5">
             {alerts.map((alert) => {
-              const isBroadcasting = alert.is_broadcast || alert.status === 'BROADCAST';
+              const isBroadcasting = alert.is_broadcast || alert.status === 'BROADCASTED';
               const isResolved = alert.status === 'RESOLVED' || !alert.is_active;
 
               return (
                 <div
                   key={alert.id}
-                  className={`bg-white rounded-2xl p-5 border shadow-sm transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 ${
-                    isBroadcasting ? 'border-amber-300 ring-2 ring-amber-100' : 'border-slate-200'
-                  }`}
+                  className={`bg-white rounded-2xl p-5 border shadow-2xs transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 ${getAlertSeverityBorder(
+                    alert.risk_level
+                  )} ${isBroadcasting ? 'ring-1 ring-amber-300' : 'border-slate-200'}`}
                 >
                   <div className="space-y-2 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span
-                        className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full ${getRiskBadgeClasses(
+                        className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border ${getRiskBadgeClasses(
                           alert.risk_level
                         )}`}
                       >
@@ -234,38 +258,47 @@ export default function Alerts() {
 
                       {/* Broadcast status badge */}
                       {isBroadcasting ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 animate-pulse">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 animate-pulse">
                           <Radio className="w-3 h-3 text-rose-600" />
                           BROADCAST ACTIVE
                         </span>
                       ) : isResolved ? (
-                        <span className="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
                           RESOLVED
                         </span>
                       ) : (
-                        <span className="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700">
+                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
                           PENDING BROADCAST
                         </span>
                       )}
 
-                      <span className="text-xs font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
-                        {alert.station_name}
+                      <span className="text-xs font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
+                        {alert.region} • {alert.station_name}
                       </span>
-                      <span className="text-xs text-slate-400 font-mono">
-                        {formatISTDateTime(alert.created_at)}
+                      <span className="text-xs text-slate-400 font-mono flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-slate-400" />
+                        <span>{formatISTDateTime(alert.created_at)}</span>
                       </span>
                     </div>
 
-                    <h3 className="font-bold text-slate-900 text-base">{alert.title}</h3>
+                    <h3 className="font-bold text-slate-900 text-base leading-snug">{alert.title}</h3>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                       {alert.message}
                     </p>
+
+                    {/* Forecast details if present */}
+                    {alert.forecast_pm25_6h !== null && alert.forecast_pm25_6h !== undefined && (
+                      <div className="inline-flex items-center gap-1.5 text-xs text-slate-500 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
+                        <TrendingUp className="w-3.5 h-3.5 text-sky-600" />
+                        <span>Forecast (+6h): <strong className="font-mono text-slate-800">{alert.forecast_pm25_6h} µg/m³</strong></span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="shrink-0 flex flex-col sm:flex-row items-end sm:items-center gap-4 border-t md:border-t-0 pt-3 md:pt-0">
                     <div className="text-right">
-                      <span className="text-[10px] font-bold uppercase text-slate-400 block">
-                        PM2.5 Trigger
+                      <span className="text-[10px] font-bold uppercase text-slate-400 block tracking-wider">
+                        Current PM2.5
                       </span>
                       <span className="text-xl font-black font-mono text-slate-900">
                         {alert.current_pm25 !== null && alert.current_pm25 !== undefined ? `${alert.current_pm25} µg/m³` : '—'}
@@ -276,19 +309,9 @@ export default function Alerts() {
                     {isAuthority && (
                       <div className="flex items-center gap-2">
                         {isResolved ? (
-                          <>
-                            <span className="px-3 py-1.5 bg-slate-100 text-slate-500 border border-slate-200 rounded-xl text-xs font-bold">
-                              Resolved
-                            </span>
-                            <button
-                              type="button"
-                              disabled
-                              title="Resolved alerts cannot be broadcast. Create or activate a new alert if a new public warning is required."
-                              className="px-3 py-1.5 bg-slate-50 text-slate-400 border border-slate-200 rounded-xl text-xs font-bold cursor-not-allowed"
-                            >
-                              Broadcast Disabled
-                            </button>
-                          </>
+                          <span className="px-3 py-1.5 bg-slate-100 text-slate-500 border border-slate-200 rounded-xl text-xs font-bold">
+                            Resolved
+                          </span>
                         ) : (
                           <>
                             {isBroadcasting ? (
@@ -306,7 +329,7 @@ export default function Alerts() {
                                 type="button"
                                 disabled={actionLoadingId === alert.id}
                                 onClick={() => handleBroadcast(alert.id)}
-                                className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all disabled:opacity-50"
+                                className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-xs transition-all disabled:opacity-50"
                               >
                                 <Radio className="w-3.5 h-3.5" />
                                 <span>Broadcast</span>
@@ -319,7 +342,7 @@ export default function Alerts() {
                               onClick={() => handleResolve(alert.id)}
                               className="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all disabled:opacity-50"
                             >
-                              <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                               <span>Resolve</span>
                             </button>
                           </>
@@ -330,7 +353,8 @@ export default function Alerts() {
                     {alert.station_id && (
                       <Link
                         to={`/station/${alert.station_id}`}
-                        className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-sm transition-all"
+                        className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-xs transition-all"
+                        title="View Station Details"
                       >
                         <span>Station</span>
                         <ArrowRight className="w-3.5 h-3.5" />

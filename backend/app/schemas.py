@@ -159,7 +159,8 @@ class EventItem(BaseModel):
     expected_crowd: int
     affected_radius_km: float
     description: Optional[str] = None
-    status: str  # active, upcoming, ended
+    zone_name: Optional[str] = None
+    status: str  # active, upcoming, ended, cancelled
 
 
 # Alert Schema

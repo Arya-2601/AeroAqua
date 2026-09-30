@@ -28,7 +28,7 @@ def get_db():
 
 def init_db():
     Base.metadata.create_all(bind=engine)
-    # Check and add new columns to alerts table if missing
+    # Check and add new columns to alerts, stations, and events tables if missing
     from sqlalchemy import text
     with engine.connect() as conn:
         for col_name, col_type in [
@@ -44,4 +44,23 @@ def init_db():
                 conn.commit()
             except Exception:
                 pass
+
+        # Station migrations
+        try:
+            conn.execute(text("ALTER TABLE stations ADD COLUMN is_active BOOLEAN DEFAULT 1"))
+            conn.commit()
+        except Exception:
+            pass
+
+        # Event migrations
+        for col_name, col_type in [
+            ("zone_name", "VARCHAR(100)"),
+            ("is_cancelled", "BOOLEAN DEFAULT 0"),
+        ]:
+            try:
+                conn.execute(text(f"ALTER TABLE events ADD COLUMN {col_name} {col_type}"))
+                conn.commit()
+            except Exception:
+                pass
+
 

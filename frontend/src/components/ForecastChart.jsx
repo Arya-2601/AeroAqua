@@ -59,15 +59,15 @@ export default function ForecastChart({ forecastData }) {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-bold text-slate-900 text-base">
-                PM2.5 Forecast (XGBoost)
+                PM2.5 Forecast
               </h3>
-              <span className="inline-flex items-center gap-1 text-[11px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full border border-indigo-200">
-                <Cpu className="w-3 h-3 text-indigo-600" />
-                Model: XGBoost Multi-Horizon
+              <span className="inline-flex items-center gap-1 text-[11px] font-semibold bg-sky-50 text-sky-700 px-2.5 py-0.5 rounded-full border border-sky-200">
+                <Cpu className="w-3 h-3 text-sky-600" />
+                XGBoost · +1h / +3h / +6h
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              XGBoost is a machine-learning model used here to forecast future PM2.5 levels from historical and contextual features (+1h, +3h, +6h with ± MAE confidence bands).
+              Multi-horizon forecast predicting atmospheric PM2.5 trajectory with confidence interval bounds.
             </p>
           </div>
         </div>

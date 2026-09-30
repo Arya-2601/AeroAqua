@@ -11,6 +11,7 @@ from sqlalchemy import desc
 from ..database import get_db
 from ..models import Anomaly, Station
 from ..schemas import AnomalyItem
+from ..services.datetime_service import format_ist_iso
 
 router = APIRouter(prefix="/api/anomalies", tags=["Anomalies"])
 
@@ -36,7 +37,7 @@ def get_anomalies(
             id=anom.id,
             station_id=anom.station_id,
             station_name=s_name,
-            timestamp=anom.timestamp.isoformat(),
+            timestamp=format_ist_iso(anom.timestamp),
             pm25=round(float(anom.pm25), 1),
             baseline_mean=round(float(anom.baseline_mean), 1),
             baseline_std=round(float(anom.baseline_std), 1),

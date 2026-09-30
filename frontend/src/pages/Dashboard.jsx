@@ -5,6 +5,7 @@ import AlertBanner from '../components/AlertBanner';
 import PollutionMap from '../components/PollutionMap';
 import StationCard from '../components/StationCard';
 import SimulateSpikeButton from '../components/SimulateSpikeButton';
+import RemoveZoneModal from '../components/RemoveZoneModal';
 import { useAuth } from '../context/AuthContext';
 import { getRegionMeta } from '../utils/regions';
 import { AQI_CATEGORIES } from '../utils/aqi';
@@ -30,6 +31,7 @@ import {
   Plus,
   RefreshCw,
   X,
+  CheckCircle2,
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -41,6 +43,12 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState(new Date());
+
+  // Remove Zone state for Authority
+  const [zoneToRemove, setZoneToRemove] = useState(null);
+  const [isRemoveZoneOpen, setIsRemoveZoneOpen] = useState(false);
+  const [removeZoneLoading, setRemoveZoneLoading] = useState(false);
+  const [actionNotice, setActionNotice] = useState(null);
 
   // Add Zone Modal state for Authority
   const [isAddZoneOpen, setIsAddZoneOpen] = useState(false);
@@ -87,6 +95,38 @@ export default function Dashboard() {
   const handleManualRefresh = () => {
     setRefreshing(true);
     fetchData();
+  };
+
+  const handleRequestRemoveZone = (zone) => {
+    setZoneToRemove(zone);
+    setIsRemoveZoneOpen(true);
+  };
+
+  const handleConfirmRemoveZone = async (stationId) => {
+    setRemoveZoneLoading(true);
+    try {
+      await api.removeStation(stationId);
+      // Immediately remove from active state without manual page refresh
+      setStations((prev) => prev.filter((s) => s.id !== stationId));
+      setIsRemoveZoneOpen(false);
+      setZoneToRemove(null);
+      setActionNotice({
+        type: 'success',
+        message: 'Zone removed successfully.'
+      });
+      setTimeout(() => {
+        setActionNotice(null);
+      }, 3500);
+    } catch (err) {
+      console.error('Failed to remove zone:', err);
+      const detail = err.response?.data?.detail || 'Failed to remove zone. Authorization required.';
+      setActionNotice({
+        type: 'error',
+        message: detail
+      });
+    } finally {
+      setRemoveZoneLoading(false);
+    }
   };
 
   const handleAddZoneSubmit = async (e) => {
@@ -167,6 +207,33 @@ export default function Dashboard() {
       <AlertBanner alerts={alerts} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+        {/* Action Notice Toast */}
+        {actionNotice && (
+          <div
+            className={`p-3.5 rounded-xl border flex items-center justify-between text-xs font-semibold shadow-xs animate-in fade-in duration-200 ${
+              actionNotice.type === 'success'
+                ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                : 'bg-rose-50 border-rose-200 text-rose-900'
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              {actionNotice.type === 'success' ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              ) : (
+                <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+              )}
+              <span>{actionNotice.message}</span>
+            </div>
+            <button
+              onClick={() => setActionNotice(null)}
+              className="p-1 text-slate-400 hover:text-slate-700"
+              aria-label="Dismiss notification"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
         {/* Role & Operational Mode Banner */}
         <div
           className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-sm ${
@@ -503,7 +570,12 @@ export default function Dashboard() {
             {stations.length > 0 ? (
               <div className="space-y-3 max-h-[660px] overflow-y-auto pr-1">
                 {sortedStations.map((station) => (
-                  <StationCard key={station.id} station={station} />
+                  <StationCard
+                    key={station.id}
+                    station={station}
+                    isAuthority={isAuthority}
+                    onRequestRemoveZone={handleRequestRemoveZone}
+                  />
                 ))}
               </div>
             ) : (
@@ -674,6 +746,19 @@ export default function Dashboard() {
             </div>
           </div>
         )}
+        {/* Authority Remove Zone Modal */}
+        <RemoveZoneModal
+          isOpen={isRemoveZoneOpen}
+          zone={zoneToRemove}
+          onClose={() => {
+            if (!removeZoneLoading) {
+              setIsRemoveZoneOpen(false);
+              setZoneToRemove(null);
+            }
+          }}
+          onConfirm={handleConfirmRemoveZone}
+          isSubmitting={removeZoneLoading}
+        />
       </main>
     </div>
   );

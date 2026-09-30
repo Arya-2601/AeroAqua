@@ -203,21 +203,21 @@ export default function StationDetail() {
 
         {/* Early-Warning Alert Box if Active */}
         {activeAlert && (
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-rose-500 via-red-600 to-rose-600 text-white shadow-md flex items-start space-x-3">
-            <span className="p-2 bg-black/20 rounded-xl shrink-0 mt-0.5">
-              <Bell className="w-5 h-5 text-white animate-bounce" />
+          <div className="p-4 rounded-xl bg-white border-l-4 border-rose-600 border-y border-r border-slate-200 shadow-sm flex items-start space-x-3">
+            <span className="p-2 bg-rose-50 rounded-xl text-rose-600 shrink-0 mt-0.5">
+              <Bell className="w-5 h-5 text-rose-600" />
             </span>
             <div className="flex-1">
               <div className="flex items-center space-x-2 mb-1">
-                <span className="text-[10px] uppercase font-black px-2 py-0.5 rounded bg-black/30">
+                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-800">
                   ACTIVE EARLY WARNING
                 </span>
-                <span className="text-xs font-semibold text-rose-100 font-mono">
+                <span className="text-xs font-semibold text-slate-500 font-mono">
                   {formatISTTime(activeAlert.created_at)}
                 </span>
               </div>
-              <h4 className="font-extrabold text-base">{activeAlert.title}</h4>
-              <p className="text-sm text-rose-50 mt-1 leading-relaxed">
+              <h4 className="font-bold text-slate-900 text-base">{activeAlert.title}</h4>
+              <p className="text-sm text-slate-600 mt-1 leading-relaxed">
                 {activeAlert.message}
               </p>
             </div>

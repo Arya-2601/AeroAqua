@@ -7,7 +7,7 @@ Processed through the complete intelligence pipeline (Baseline -> Anomaly -> Con
 """
 
 from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Header
 from pydantic import BaseModel, Field
 from typing import Dict, Any, Optional
 from sqlalchemy.orm import Session
@@ -19,6 +19,8 @@ from ..services.anomaly import detect_station_latest_anomaly
 from ..services.correlation import get_station_correlation_context
 from ..services.forecasting import forecast_station_pm25
 from ..services.alerts import evaluate_and_update_station_alert
+from ..services.auth_service import require_authority
+from ..services.datetime_service import format_ist_iso
 
 router = APIRouter(prefix="/api/simulate", tags=["Simulation"])
 
@@ -43,12 +45,19 @@ class DemoAnomalyResponse(BaseModel):
 
 
 @router.post("/spike", response_model=DemoAnomalyResponse)
-def run_demo_anomaly(payload: DemoAnomalyRequest, db: Session = Depends(get_db)):
+def run_demo_anomaly(
+    payload: DemoAnomalyRequest,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+    x_user_role: Optional[str] = Header(None),
+):
     """
     Run Demo Anomaly (Simulation):
     Manually triggers a controlled spike to demonstrate the ML anomaly,
     contextual correlation, forecasting, and alert broadcasting pipeline.
+    Authority only. Citizen requests are rejected with 403 Forbidden.
     """
+    require_authority(authorization=authorization, x_user_role=x_user_role, db=db)
     station = db.query(Station).filter(Station.id == payload.station_id).first()
     if not station:
         raise HTTPException(status_code=404, detail="Station not found")
@@ -142,7 +151,7 @@ def run_demo_anomaly(payload: DemoAnomalyRequest, db: Session = Depends(get_db))
         station_id=payload.station_id,
         station_name=station.name,
         updated_pm25=spiked_pm25,
-        timestamp_utc=target_ts.isoformat(),
+        timestamp_utc=format_ist_iso(target_ts),
         source_label="Demo Simulation",
         anomaly=anomaly_res,
         forecast=forecast_res,

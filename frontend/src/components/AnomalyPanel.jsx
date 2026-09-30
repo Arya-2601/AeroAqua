@@ -17,7 +17,7 @@ export default function AnomalyPanel({ anomaly, currentPm25 }) {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           {isAnomaly ? (
-            <div className="p-2 bg-rose-500 text-white rounded-xl shadow-sm animate-bounce">
+            <div className="p-2 bg-rose-500 text-white rounded-xl shadow-sm">
               <AlertCircle className="w-5 h-5" />
             </div>
           ) : (

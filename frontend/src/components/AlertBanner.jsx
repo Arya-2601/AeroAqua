@@ -17,18 +17,18 @@ export default function AlertBanner({ alerts = [] }) {
     <div
       className={`border-b transition-all duration-300 ${
         isCritical
-          ? 'bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white border-red-800'
-          : 'bg-gradient-to-r from-orange-500 via-amber-600 to-orange-600 text-white border-orange-700'
+          ? 'bg-[#1e1b1e] text-white border-rose-900/60 border-l-4 border-l-rose-500'
+          : 'bg-[#1f1d18] text-white border-amber-900/60 border-l-4 border-l-amber-500'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 py-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center space-x-3 flex-1 min-w-0">
-            <span className="p-1.5 bg-black/20 rounded-lg shrink-0">
+            <span className={`p-1.5 rounded-lg shrink-0 ${isCritical ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400'}`}>
               {isCritical ? (
-                <AlertOctagon className="w-5 h-5 text-white animate-bounce" />
+                <AlertOctagon className="w-5 h-5 text-rose-400" />
               ) : (
-                <AlertTriangle className="w-5 h-5 text-white" />
+                <AlertTriangle className="w-5 h-5 text-amber-400" />
               )}
             </span>
             <div className="truncate">

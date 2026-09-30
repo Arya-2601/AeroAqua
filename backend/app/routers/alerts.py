@@ -1,17 +1,20 @@
 """
 Alerts Router for AeroAqua API
 Provides early-warning alerts endpoints and the Authority Broadcast System.
+All actions protected by authority authorization and timestamps serialized in Asia/Kolkata (IST).
 """
 
 from datetime import datetime
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query, HTTPException
+from fastapi import APIRouter, Depends, Query, HTTPException, Header
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 
 from ..database import get_db
 from ..models import Alert, Station
+from ..services.auth_service import require_authority, AuthenticatedUser
+from ..services.datetime_service import format_ist_iso, get_now_ist
 
 router = APIRouter(prefix="/api/alerts", tags=["Alerts"])
 
@@ -63,7 +66,7 @@ def get_alerts(
             id=alert.id,
             station_id=alert.station_id,
             station_name=s_name or f"{alert.region} Regional Sensor",
-            created_at=alert.created_at.isoformat(),
+            created_at=format_ist_iso(alert.created_at),
             domain=alert.domain or "air",
             region=alert.region or "Delhi",
             risk_level=alert.risk_level,
@@ -73,7 +76,7 @@ def get_alerts(
             forecast_pm25_6h=round(float(alert.forecast_pm25_6h), 1) if alert.forecast_pm25_6h is not None else None,
             status=alert.status or ("ACTIVE" if alert.is_active else "RESOLVED"),
             is_broadcast=bool(alert.is_broadcast),
-            broadcast_at=alert.broadcast_at.isoformat() if alert.broadcast_at else None,
+            broadcast_at=format_ist_iso(alert.broadcast_at) if alert.broadcast_at else None,
             is_active=alert.is_active,
         ))
 
@@ -103,7 +106,7 @@ def get_active_broadcasts(
             id=alert.id,
             station_id=alert.station_id,
             station_name=s_name or f"{alert.region} Sensor",
-            created_at=alert.created_at.isoformat(),
+            created_at=format_ist_iso(alert.created_at),
             domain=alert.domain or "air",
             region=alert.region or "Delhi",
             risk_level=alert.risk_level,
@@ -113,15 +116,26 @@ def get_active_broadcasts(
             forecast_pm25_6h=round(float(alert.forecast_pm25_6h), 1) if alert.forecast_pm25_6h is not None else None,
             status=alert.status,
             is_broadcast=True,
-            broadcast_at=alert.broadcast_at.isoformat() if alert.broadcast_at else None,
+            broadcast_at=format_ist_iso(alert.broadcast_at) if alert.broadcast_at else None,
             is_active=alert.is_active,
         ))
     return items
 
 
 @router.post("/{alert_id}/broadcast")
-def broadcast_alert(alert_id: int, db: Session = Depends(get_db)):
-    """Authority action: Broadcast alert to citizen dashboard. Resolved alerts cannot be broadcast."""
+def broadcast_alert(
+    alert_id: int,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+    x_user_role: Optional[str] = Header(None),
+):
+    """
+    Authority action: Broadcast alert to citizen dashboard.
+    Rejects unauthorized citizen requests.
+    Resolved alerts cannot be broadcast.
+    """
+    require_authority(authorization=authorization, x_user_role=x_user_role, db=db)
+
     alert = db.query(Alert).filter(Alert.id == alert_id).first()
     if not alert:
         raise HTTPException(status_code=404, detail="Alert not found")
@@ -138,9 +152,10 @@ def broadcast_alert(alert_id: int, db: Session = Depends(get_db)):
             detail="Alert is already actively broadcasted."
         )
 
+    now_ist = get_now_ist().replace(tzinfo=None)
     alert.is_broadcast = True
     alert.status = "BROADCASTED"
-    alert.broadcast_at = datetime.utcnow()
+    alert.broadcast_at = now_ist
     db.commit()
 
     return {
@@ -153,8 +168,18 @@ def broadcast_alert(alert_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{alert_id}/stop-broadcast")
-def stop_broadcast(alert_id: int, db: Session = Depends(get_db)):
-    """Authority action: Stop active broadcast (disappears from citizen dashboard, history preserved)."""
+def stop_broadcast(
+    alert_id: int,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+    x_user_role: Optional[str] = Header(None),
+):
+    """
+    Authority action: Stop active broadcast (disappears from citizen dashboard, history preserved).
+    Rejects unauthorized citizen requests.
+    """
+    require_authority(authorization=authorization, x_user_role=x_user_role, db=db)
+
     alert = db.query(Alert).filter(Alert.id == alert_id).first()
     if not alert:
         raise HTTPException(status_code=404, detail="Alert not found")
@@ -179,16 +204,27 @@ def stop_broadcast(alert_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{alert_id}/resolve")
-def resolve_alert(alert_id: int, db: Session = Depends(get_db)):
-    """Authority action: Mark alert as resolved."""
+def resolve_alert(
+    alert_id: int,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+    x_user_role: Optional[str] = Header(None),
+):
+    """
+    Authority action: Mark alert as resolved.
+    Rejects unauthorized citizen requests.
+    """
+    require_authority(authorization=authorization, x_user_role=x_user_role, db=db)
+
     alert = db.query(Alert).filter(Alert.id == alert_id).first()
     if not alert:
         raise HTTPException(status_code=404, detail="Alert not found")
 
+    now_ist = get_now_ist().replace(tzinfo=None)
     alert.is_active = False
     alert.is_broadcast = False
     alert.status = "RESOLVED"
-    alert.resolved_at = datetime.utcnow()
+    alert.resolved_at = now_ist
     db.commit()
 
     return {

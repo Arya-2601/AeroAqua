@@ -21,6 +21,7 @@ class Station(Base):
     distance_to_major_road_m = Column(Float, default=0.0)
     road_density = Column(Float, default=0.0)
     industrial_distance_km = Column(Float, default=0.0)
+    is_active = Column(Boolean, default=True, nullable=False, index=True)
 
     # Relationships
     air_readings = relationship("AirQuality", back_populates="station", cascade="all, delete-orphan")
@@ -110,6 +111,8 @@ class Event(Base):
     expected_crowd = Column(Integer, default=0)
     affected_radius_km = Column(Float, default=2.0)
     description = Column(String(500), nullable=True)
+    zone_name = Column(String(100), nullable=True)
+    is_cancelled = Column(Boolean, default=False, nullable=False, index=True)
 
 
 class Anomaly(Base):

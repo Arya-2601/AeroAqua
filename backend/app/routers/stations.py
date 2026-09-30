@@ -5,7 +5,7 @@ Provides station listings, station details, readings time-series, context, and f
 
 from datetime import datetime, timedelta
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Header
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 
@@ -20,6 +20,8 @@ from ..services.anomaly import detect_station_latest_anomaly, calculate_baseline
 from ..services.correlation import get_station_correlation_context
 from ..services.forecasting import forecast_station_pm25
 from ..services.alerts import determine_risk_level
+from ..services.auth_service import require_authority, AuthenticatedUser
+from ..services.datetime_service import format_ist_iso, get_now_ist
 
 router = APIRouter(prefix="/api/stations", tags=["Stations"])
 
@@ -30,11 +32,12 @@ def get_stations(
     db: Session = Depends(get_db)
 ):
     """
-    List all stations with latest PM2.5, category, color, risk_level, and anomaly status.
+    List all active stations with latest PM2.5, category, color, risk_level, and anomaly status.
     Respects region parameter: returns stations for Delhi, Maharashtra, Gujarat,
     or empty list for regions where monitoring stations are not deployed.
+    Only active (non-removed) stations are returned.
     """
-    query = db.query(Station)
+    query = db.query(Station).filter(Station.is_active.is_(True))
     if region and region.lower() != "all":
         reg_clean = region.strip().lower()
         if reg_clean in ["delhi", "delhi ncr", "delhi nct", "national capital territory of delhi"]:
@@ -58,7 +61,7 @@ def get_stations(
         )
 
         curr_pm25 = float(latest_aq.pm25) if latest_aq else 0.0
-        ts_str = latest_aq.timestamp.isoformat() if latest_aq else None
+        ts_str = format_ist_iso(latest_aq.timestamp) if latest_aq else None
         aqi_info = get_aqi_info(curr_pm25)
 
         # Check active anomaly
@@ -112,11 +115,18 @@ def get_stations(
 
 
 @router.post("", response_model=StationDetail)
-def create_station(payload: StationCreate, db: Session = Depends(get_db)):
+def create_station(
+    payload: StationCreate,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+    x_user_role: Optional[str] = Header(None),
+):
     """
     Authority Action: Add a new monitoring zone for the selected region.
     Initializes baseline hourly records so anomaly, forecast, and context engines operate immediately.
+    Protected by authority authorization.
     """
+    require_authority(authorization=authorization, x_user_role=x_user_role, db=db)
     import random
     new_station = Station(
         name=payload.name,
@@ -130,6 +140,7 @@ def create_station(payload: StationCreate, db: Session = Depends(get_db)):
         distance_to_major_road_m=280.0,
         road_density=2.8,
         industrial_distance_km=4.5,
+        is_active=True,
     )
     db.add(new_station)
     db.commit()
@@ -176,6 +187,46 @@ def create_station(payload: StationCreate, db: Session = Depends(get_db)):
     db.commit()
 
     return get_station_detail(new_station.id, db)
+
+
+@router.delete("/{station_id}")
+def remove_station(
+    station_id: int,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+    x_user_role: Optional[str] = Header(None),
+):
+    """
+    Authority Action: Remove a zone from the active monitoring grid.
+    Soft-deletes the station (sets is_active=False) preserving all historical records.
+    Enforces that citizen users receive a 403 Forbidden authorization error.
+    Enforces state-isolation: Authority of one state cannot remove a zone in another state.
+    """
+    user = require_authority(authorization=authorization, x_user_role=x_user_role, db=db)
+
+    station = db.query(Station).filter(Station.id == station_id).first()
+    if not station or not station.is_active:
+        raise HTTPException(status_code=404, detail="Station not found or already inactive.")
+
+    # Cross-state permission check: An authority operating in one state must not remove another state's zone
+    if user.region and user.region.lower() not in ["all", "global"] and user.region.lower() != station.region.lower():
+        raise HTTPException(
+            status_code=403,
+            detail=f"Forbidden: Authority for {user.region} is not permitted to remove monitoring zones in {station.region}."
+        )
+
+    # Soft-delete to preserve all historical records
+    station.is_active = False
+    db.commit()
+
+    return {
+        "status": "ok",
+        "message": f"Zone '{station.name}' removed successfully.",
+        "station_id": station_id,
+        "station_name": station.name,
+        "region": station.region,
+    }
+
 
 
 @router.get("/{station_id}", response_model=StationDetail)
@@ -331,7 +382,7 @@ def get_station_readings(
         eval_res = evaluate_reading_anomaly(r.pm25, mean_val, std_val)
 
         items.append(ReadingItem(
-            timestamp=r.timestamp.isoformat(),
+            timestamp=format_ist_iso(r.timestamp),
             pm25=round(float(r.pm25), 1),
             baseline_mean=round(mean_val, 1),
             baseline_upper=round(upper_val, 1),
