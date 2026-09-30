@@ -1,0 +1,96 @@
+{
+  "city": {
+    "name": "Delhi",
+    "center": {
+      "latitude": 28.6139,
+      "longitude": 77.2090
+    },
+    "zoom": 12
+  },
+  "stations": [
+    {
+      "id": 1,
+      "name": "Zone A",
+      "zone_profile": "Residential",
+      "latitude": 28.6500,
+      "longitude": 77.1800,
+      "baseline_pm25": 65,
+      "major_road_count_2km": 1,
+      "distance_to_highway_m": 3500,
+      "distance_to_major_road_m": 850,
+      "road_density": 0.35,
+      "industrial_distance_km": 6.2,
+      "notes": "Calm, few roads, green residential pockets"
+    },
+    {
+      "id": 2,
+      "name": "Zone B",
+      "zone_profile": "Commercial + stadium",
+      "latitude": 28.6139,
+      "longitude": 77.2090,
+      "baseline_pm25": 90,
+      "major_road_count_2km": 3,
+      "distance_to_highway_m": 1200,
+      "distance_to_major_road_m": 150,
+      "road_density": 0.85,
+      "industrial_distance_km": 4.5,
+      "notes": "Demo hotspot: near JLN Stadium venue, 3 major arterial roads"
+    },
+    {
+      "id": 3,
+      "name": "Zone C",
+      "zone_profile": "Industrial",
+      "latitude": 28.5800,
+      "longitude": 77.2500,
+      "baseline_pm25": 110,
+      "major_road_count_2km": 2,
+      "distance_to_highway_m": 900,
+      "distance_to_major_road_m": 300,
+      "road_density": 0.72,
+      "industrial_distance_km": 0.8,
+      "notes": "Okhla Industrial area 0.8 km away"
+    },
+    {
+      "id": 4,
+      "name": "Zone D",
+      "zone_profile": "Highway corridor",
+      "latitude": 28.6700,
+      "longitude": 77.2300,
+      "baseline_pm25": 100,
+      "major_road_count_2km": 4,
+      "distance_to_highway_m": 180,
+      "distance_to_major_road_m": 90,
+      "road_density": 0.90,
+      "industrial_distance_km": 3.8,
+      "notes": "Adjacent to Grand Trunk Road / NH44 highway corridor"
+    },
+    {
+      "id": 5,
+      "name": "Zone E",
+      "zone_profile": "Green / park",
+      "latitude": 28.5900,
+      "longitude": 77.1600,
+      "baseline_pm25": 50,
+      "major_road_count_2km": 0,
+      "distance_to_highway_m": 4200,
+      "distance_to_major_road_m": 1600,
+      "road_density": 0.20,
+      "industrial_distance_km": 8.0,
+      "notes": "Ridge Forest green reserve, lowest pollution baseline"
+    },
+    {
+      "id": 6,
+      "name": "Zone F",
+      "zone_profile": "Mixed urban",
+      "latitude": 28.6300,
+      "longitude": 77.2600,
+      "baseline_pm25": 80,
+      "major_road_count_2km": 2,
+      "distance_to_highway_m": 2100,
+      "distance_to_major_road_m": 400,
+      "road_density": 0.55,
+      "industrial_distance_km": 3.2,
+      "notes": "Average urban high-density commercial/residential mix"
+    }
+  ]
+}
