@@ -1,7 +1,0 @@
-id,name,latitude,longitude,zone_profile,major_road_count_2km,distance_to_highway_m,distance_to_major_road_m,road_density,industrial_distance_km
-1,Zone A,28.65,77.18,Residential,1,3500,850,0.35,6.2
-2,Zone B,28.6139,77.209,Commercial + stadium,3,1200,150,0.85,4.5
-3,Zone C,28.58,77.25,Industrial,2,900,300,0.72,0.8
-4,Zone D,28.67,77.23,Highway corridor,4,180,90,0.9,3.8
-5,Zone E,28.59,77.16,Green / park,0,4200,1600,0.2,8.0
-6,Zone F,28.63,77.26,Mixed urban,2,2100,400,0.55,3.2
