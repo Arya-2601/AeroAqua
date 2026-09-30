@@ -1,0 +1,17 @@
+{
+  "1h": {
+    "mae": 5.58,
+    "rmse": 7.32,
+    "horizon_hours": 1
+  },
+  "3h": {
+    "mae": 5.49,
+    "rmse": 7.25,
+    "horizon_hours": 3
+  },
+  "6h": {
+    "mae": 5.76,
+    "rmse": 8.22,
+    "horizon_hours": 6
+  }
+}

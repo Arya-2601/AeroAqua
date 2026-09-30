@@ -1,0 +1,58 @@
+road_id,station_id,road_name,road_type,distance_m
+1,1,Ring Road Arterial,major,150
+2,1,Grand Trunk Highway,major,150
+3,1,Mathura Road Express,major,150
+4,1,Barapullah Elevated Corridor,minor,600
+5,2,Western Express Highway,major,350
+6,2,Eastern Freeway Arterial,major,350
+7,2,Pune-Bangalore Highway Link,minor,1000
+8,3,Ahmedabad SG Highway,highway,800
+9,3,Surat Ring Road Corridor,major,200
+10,3,Nehru Road Sector 4,major,200
+11,3,Vikas Marg Bypass,minor,700
+12,4,Outer Ring Expressway,highway,450
+13,4,Ring Road Arterial,major,120
+14,4,Grand Trunk Highway,major,120
+15,4,Mathura Road Express,major,120
+16,4,Barapullah Elevated Corridor,minor,540
+17,5,Western Express Highway,major,800
+18,5,Eastern Freeway Arterial,minor,1900
+19,6,Pune-Bangalore Highway Link,highway,900
+20,6,Ahmedabad SG Highway,major,100
+21,6,Surat Ring Road Corridor,major,100
+22,6,Nehru Road Sector 4,major,100
+23,6,Vikas Marg Bypass,minor,500
+24,7,Outer Ring Expressway,highway,250
+25,7,Ring Road Arterial,major,80
+26,7,Grand Trunk Highway,major,80
+27,7,Mathura Road Express,major,80
+28,7,Barapullah Elevated Corridor,major,80
+29,7,Western Express Highway,minor,460
+30,8,Eastern Freeway Arterial,highway,600
+31,8,Pune-Bangalore Highway Link,major,220
+32,8,Ahmedabad SG Highway,major,220
+33,8,Surat Ring Road Corridor,minor,740
+34,9,Nehru Road Sector 4,major,300
+35,9,Vikas Marg Bypass,major,300
+36,9,Outer Ring Expressway,minor,900
+37,10,Ring Road Arterial,major,250
+38,10,Grand Trunk Highway,major,250
+39,10,Mathura Road Express,minor,800
+40,11,Barapullah Elevated Corridor,major,180
+41,11,Western Express Highway,major,180
+42,11,Eastern Freeway Arterial,major,180
+43,11,Pune-Bangalore Highway Link,minor,660
+44,12,Ahmedabad SG Highway,highway,500
+45,12,Surat Ring Road Corridor,major,140
+46,12,Nehru Road Sector 4,major,140
+47,12,Vikas Marg Bypass,major,140
+48,12,Outer Ring Expressway,minor,580
+49,13,Ring Road Arterial,highway,750
+50,13,Grand Trunk Highway,major,200
+51,13,Mathura Road Express,major,200
+52,13,Barapullah Elevated Corridor,minor,700
+53,14,Western Express Highway,major,350
+54,14,Eastern Freeway Arterial,major,350
+55,14,Pune-Bangalore Highway Link,minor,1000
+56,15,Ahmedabad SG Highway,major,600
+57,15,Surat Ring Road Corridor,minor,1500

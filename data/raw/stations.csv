@@ -1,0 +1,16 @@
+id,name,region,data_source,latitude,longitude,zone_profile,major_road_count_2km,distance_to_highway_m,distance_to_major_road_m,road_density,industrial_distance_km
+1,Central Delhi,Delhi,Live API Observation + Regional Monitoring,28.6139,77.209,Commercial + stadium,3,1200,150,0.85,4.5
+2,Rohini,Delhi,Live API Observation + Regional Monitoring,28.7495,77.0565,Residential,2,1800,350,0.65,5.0
+3,Dwarka,Delhi,Live API Observation + Regional Monitoring,28.5921,77.046,Highway corridor,3,800,200,0.7,6.5
+4,East Delhi,Delhi,Live API Observation + Regional Monitoring,28.6279,77.2789,Industrial,4,450,120,0.9,1.2
+5,South Delhi,Delhi,Live API Observation + Regional Monitoring,28.5402,77.2185,Green / park,1,3200,800,0.3,7.5
+6,Mumbai Central,Maharashtra,Regional Monitoring Data,18.9712,72.8222,Commercial,4,900,100,0.88,4.0
+7,Andheri,Maharashtra,Regional Monitoring Data,19.1136,72.8697,Traffic Corridor,5,250,80,0.95,3.2
+8,Navi Mumbai,Maharashtra,Regional Monitoring Data,19.033,73.0297,Industrial,3,600,220,0.72,1.5
+9,Pune,Maharashtra,Regional Monitoring Data,18.5204,73.8567,Residential,2,1400,300,0.6,5.8
+10,Nagpur,Maharashtra,Regional Monitoring Data,21.1458,79.0882,Commercial,2,1200,250,0.55,4.5
+11,Ahmedabad,Gujarat,Regional Monitoring Data,23.0225,72.5714,Commercial,3,1100,180,0.82,3.5
+12,Surat,Gujarat,Regional Monitoring Data,21.1702,72.8311,Industrial,4,500,140,0.85,1.1
+13,Vadodara,Gujarat,Regional Monitoring Data,22.3072,73.1812,Industrial,3,750,200,0.68,2.0
+14,Rajkot,Gujarat,Regional Monitoring Data,22.3039,70.8022,Residential,2,1500,350,0.58,4.2
+15,Gandhinagar,Gujarat,Regional Monitoring Data,23.2156,72.6369,Green Area,1,2800,600,0.28,7.0
