@@ -1,16 +1,36 @@
 id,name,region,data_source,latitude,longitude,zone_profile,major_road_count_2km,distance_to_highway_m,distance_to_major_road_m,road_density,industrial_distance_km
-1,Central Delhi,Delhi,Live API Observation + Regional Monitoring,28.6139,77.209,Commercial + stadium,3,1200,150,0.85,4.5
+1,Central Delhi,Delhi,Live API Observation + Regional Monitoring,28.6139,77.209,Commercial + Stadium,3,1200,150,0.85,4.5
 2,Rohini,Delhi,Live API Observation + Regional Monitoring,28.7495,77.0565,Residential,2,1800,350,0.65,5.0
-3,Dwarka,Delhi,Live API Observation + Regional Monitoring,28.5921,77.046,Highway corridor,3,800,200,0.7,6.5
-4,East Delhi,Delhi,Live API Observation + Regional Monitoring,28.6279,77.2789,Industrial,4,450,120,0.9,1.2
-5,South Delhi,Delhi,Live API Observation + Regional Monitoring,28.5402,77.2185,Green / park,1,3200,800,0.3,7.5
-6,Mumbai Central,Maharashtra,Regional Monitoring Data,18.9712,72.8222,Commercial,4,900,100,0.88,4.0
-7,Andheri,Maharashtra,Regional Monitoring Data,19.1136,72.8697,Traffic Corridor,5,250,80,0.95,3.2
-8,Navi Mumbai,Maharashtra,Regional Monitoring Data,19.033,73.0297,Industrial,3,600,220,0.72,1.5
-9,Pune,Maharashtra,Regional Monitoring Data,18.5204,73.8567,Residential,2,1400,300,0.6,5.8
-10,Nagpur,Maharashtra,Regional Monitoring Data,21.1458,79.0882,Commercial,2,1200,250,0.55,4.5
-11,Ahmedabad,Gujarat,Regional Monitoring Data,23.0225,72.5714,Commercial,3,1100,180,0.82,3.5
-12,Surat,Gujarat,Regional Monitoring Data,21.1702,72.8311,Industrial,4,500,140,0.85,1.1
-13,Vadodara,Gujarat,Regional Monitoring Data,22.3072,73.1812,Industrial,3,750,200,0.68,2.0
-14,Rajkot,Gujarat,Regional Monitoring Data,22.3039,70.8022,Residential,2,1500,350,0.58,4.2
-15,Gandhinagar,Gujarat,Regional Monitoring Data,23.2156,72.6369,Green Area,1,2800,600,0.28,7.0
+3,Dwarka,Delhi,Live API Observation + Regional Monitoring,28.5921,77.046,Highway Corridor,3,800,200,0.7,6.5
+4,East Delhi,Delhi,Live API Observation + Regional Monitoring,28.6279,77.2789,Industrial Transit,4,450,120,0.9,1.2
+5,South Delhi,Delhi,Live API Observation + Regional Monitoring,28.5402,77.2185,Green / Park,1,3200,800,0.3,7.5
+6,New Delhi,Delhi,Live API Observation + Regional Monitoring,28.6015,77.1985,Government Enclave,2,2400,300,0.45,6.8
+7,North Delhi,Delhi,Live API Observation + Regional Monitoring,28.6812,77.2228,University / Heritage,3,1400,220,0.72,4.8
+8,West Delhi,Delhi,Live API Observation + Regional Monitoring,28.6692,77.131,Commercial / Residential,3,950,180,0.78,3.8
+9,Shahdara,Delhi,Live API Observation + Regional Monitoring,28.6734,77.2915,Industrial Cluster,4,600,140,0.88,1.5
+10,Okhla,Delhi,Live API Observation + Regional Monitoring,28.5307,77.2711,Industrial Complex,4,400,110,0.92,0.8
+11,Mumbai Central,Maharashtra,Regional Monitoring Data,18.9712,72.8222,Commercial,4,900,100,0.88,4.0
+12,Andheri,Maharashtra,Regional Monitoring Data,19.1136,72.8697,Traffic Corridor,5,250,80,0.95,3.2
+13,Navi Mumbai,Maharashtra,Regional Monitoring Data,19.033,73.0297,Industrial,3,600,220,0.72,1.5
+14,Pune,Maharashtra,Regional Monitoring Data,18.5204,73.8567,Residential,2,1400,300,0.6,5.8
+15,Nagpur,Maharashtra,Regional Monitoring Data,21.1458,79.0882,Logistics Hub,2,1200,250,0.55,4.5
+16,Thane,Maharashtra,Regional Monitoring Data,19.2183,72.9781,Urban Transit Corridor,3,700,180,0.8,2.8
+17,Nashik,Maharashtra,Regional Monitoring Data,19.9975,73.7898,Industrial & Agro,2,1100,260,0.52,3.6
+18,Chhatrapati Sambhajinagar,Maharashtra,Regional Monitoring Data,19.8762,75.3433,Industrial Cluster,3,850,200,0.62,2.2
+19,Kolhapur,Maharashtra,Regional Monitoring Data,16.705,74.2433,Commercial / Foundry,2,1300,310,0.48,3.9
+20,Solapur,Maharashtra,Regional Monitoring Data,17.6599,75.9064,Textile Hub,2,1050,240,0.56,2.5
+21,Amravati,Maharashtra,Regional Monitoring Data,20.932,77.7523,Agro-Industrial,2,1500,350,0.44,4.1
+22,Vasai-Virar,Maharashtra,Regional Monitoring Data,19.3919,72.8397,Coastal Urban Belt,3,900,210,0.68,3.4
+23,Kalyan-Dombivli,Maharashtra,Regional Monitoring Data,19.2403,73.1305,Dense Urban & Chemical,4,650,150,0.84,1.8
+24,Ahmedabad,Gujarat,Regional Monitoring Data,23.0225,72.5714,Commercial,3,1100,180,0.82,3.5
+25,Surat,Gujarat,Regional Monitoring Data,21.1702,72.8311,Industrial,4,500,140,0.85,1.1
+26,Vadodara,Gujarat,Regional Monitoring Data,22.3072,73.1812,Industrial,3,750,200,0.68,2.0
+27,Rajkot,Gujarat,Regional Monitoring Data,22.3039,70.8022,Residential & Engineering,2,1500,350,0.58,4.2
+28,Gandhinagar,Gujarat,Regional Monitoring Data,23.2156,72.6369,Green Area,1,2800,600,0.28,7.0
+29,Bhavnagar,Gujarat,Regional Monitoring Data,21.7645,72.1519,Port & Industrial,2,1200,280,0.54,2.9
+30,Jamnagar,Gujarat,Regional Monitoring Data,22.4707,70.0577,Petrochemical Refinery,3,800,190,0.65,1.7
+31,Junagadh,Gujarat,Regional Monitoring Data,21.5222,70.4579,Heritage & Agro,2,1600,380,0.42,5.1
+32,Vapi,Gujarat,Regional Monitoring Data,20.3893,72.9106,Chemical Industrial,4,400,120,0.9,0.9
+33,Anand,Gujarat,Regional Monitoring Data,22.5645,72.9289,Agro-Industrial,2,1350,290,0.5,4.0
+34,Bharuch,Gujarat,Regional Monitoring Data,21.7051,72.9959,Petrochemical & Port,3,600,160,0.74,1.4
+35,Morbi,Gujarat,Regional Monitoring Data,22.8173,70.8377,Ceramic Industrial,3,550,150,0.8,1.2
